@@ -1,21 +1,37 @@
-import {Center, Link, Text, VStack} from '@chakra-ui/react';
 import {useTranslation} from 'react-i18next';
+import styled from 'styled-components';
+import {colors, fontSizes} from '../theme/tokens';
 
-const API_DOCS_HREF = 'http://localhost:3001/api/docs';
+const Center = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding: 40px;
+`;
+
+const Stack = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 600px;
+`;
+
+const Message = styled.p`
+  font-size: ${fontSizes.heading[2]};
+  color: ${colors.text.primary};
+`;
 
 export function Welcome() {
   const {t} = useTranslation();
 
   return (
-    <Center height="100vh" width="100wv" padding="10">
-      <VStack gap="10px" width="100%" maxWidth="600px">
-        <Text fontSize="2xl" color="blue.900">
-          {t('welcome.message')}
-        </Text>
-        <Link color="blue.400" href={API_DOCS_HREF} target="_blank">
-          {t('welcome.link')}
-        </Link>
-      </VStack>
+    <Center>
+      <Stack>
+        <Message>{t('welcome.message')}</Message>
+      </Stack>
     </Center>
   );
 }
