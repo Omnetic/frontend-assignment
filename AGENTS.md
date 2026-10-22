@@ -15,14 +15,16 @@ Hiring entry task: candidates build a full-stack todo app ("Zentask"). This repo
 
 ## Commands
 
-- `npm start` - run the dev server (Vite)
+- `npm start` - run the dev server (Vite, http://localhost:5173)
 - `npm test` - run unit tests (Jest)
+- `npm run lint` - eslint, check only
+- `npm run format:check` - prettier, check only
 - `npm run eslint` - lint (auto-fixes)
 - `npm run prettify` - format with Prettier (writes files)
 - `npm run typecheck` - TypeScript check, no emit
 
 Code must pass eslint, prettier and typecheck:
-`npm run eslint && npm run prettify && npm run typecheck`
+`npm run lint && npm run format:check && npm run typecheck && npm test`
 
 ## Links
 

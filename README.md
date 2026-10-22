@@ -58,16 +58,16 @@ Build it against your own API, matching the prototype in `prototype/index.html`.
 - Design tokens (colors, typography) live in `src/theme/tokens.ts` — wire them into any styling solution you like
 - For unit testing, [Jest](https://jestjs.io/) is already installed
 - Use our prettier, eslint, and typescript config for static testing
-  `npm run eslint && npm run prettify && npm run typecheck`
+  `npm run lint`, `npm run format:check`, `npm run typecheck`
 
 ## Before you submit
 
 Make sure every box ticks — on a clean machine, not just yours:
 
 - [ ] `docker compose up` starts your backend — PHP or Node — together with its database
-- [ ] `npm start` runs the frontend against it
+- [ ] `npm install`, then `npm start` runs the frontend (on `http://localhost:5173`) against it
 - [ ] All tests pass: `npm test`
-- [ ] Lint, formatting and types are clean: `npm run eslint && npm run prettify && npm run typecheck`
+- [ ] Lint, formatting and types are clean: `npm run lint && npm run format:check && npm run typecheck`
 - [ ] Your README explains the setup and where the OpenAPI schema lives
 
 Feel free to update the README with any notes, feedback or comments.

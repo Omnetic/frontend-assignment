@@ -24,7 +24,7 @@ button{font:inherit;cursor:pointer}
 .user{display:flex;align-items:center;gap:8px;font-size:var(--fs-small);font-weight:var(--fw-alt)}
 .avatar{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#c99a6b,#7a5233);color:#fff;font-size:11px;display:grid;place-items:center}
 .card{background:var(--fill-white);border-radius:16px;padding:24px;box-shadow:0 1px 2px rgba(0,17,65,.05)}
-h1{font-size:var(--fs-h3);font-weight:var(--fw-h1);margin:0}
+h1{font-size:var(--fs-h3);font-weight:var(--fw-h1);margin:0;overflow-wrap:anywhere;min-width:0}
 h2{font-size:var(--fs-small);font-weight:var(--fw-h2);margin:0;padding-bottom:8px;border-bottom:1px solid var(--fill-gray-hover)}
 .date,.desc{color:var(--text-tertiary);font-size:var(--fs-small)}
 .head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px}
@@ -40,10 +40,10 @@ h2{font-size:var(--fs-small);font-weight:var(--fw-h2);margin:0;padding-bottom:8p
 .chk.on{background:var(--fill-brand);border-color:var(--fill-brand)}
 .chk.on::after{content:"";width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg) translate(-1px,-1px)}
 .body{flex:1;min-width:0}
-.title{font-size:var(--fs-small);font-weight:var(--fw-alt)}
+.title{font-size:var(--fs-small);font-weight:var(--fw-alt);overflow-wrap:anywhere}
 .done .title{color:var(--text-tertiary)}
 .key{font:11px var(--mono);color:var(--text-tertiary);margin-left:8px}
-.desc{margin:2px 0 0;font-size:12px}
+.desc{margin:2px 0 0;font-size:12px;overflow-wrap:anywhere}
 .more{border:0;background:none;color:var(--text-secondary);font-size:18px;line-height:1;padding:2px 8px;border-radius:6px}
 .more:hover{background:var(--fill-gray)}
 .menu{position:absolute;right:0;top:36px;background:#fff;border-radius:8px;box-shadow:0 4px 16px rgba(0,17,65,.18);padding:4px;z-index:5;min-width:150px}
@@ -56,7 +56,7 @@ h2{font-size:var(--fs-small);font-weight:var(--fw-h2);margin:0;padding-bottom:8p
 .sub{text-align:center;font-size:var(--fs-small);color:var(--text-secondary);margin:16px 0 0}
 .sub a{color:var(--fill-brand);font-weight:var(--fw-alt);text-decoration:none}
 .sub a:hover{text-decoration:underline}
-.full{font-size:var(--fs-small);color:var(--text-primary);white-space:pre-wrap;margin:0 0 24px}
+.full{font-size:var(--fs-small);color:var(--text-primary);white-space:pre-wrap;margin:0 0 24px;overflow-wrap:anywhere}
 .tog{display:inline-flex;align-items:center;gap:8px;border:0;background:none;padding:0 8px;font-size:var(--fs-small);font-weight:var(--fw-alt);color:var(--text-primary)}
 .tog .chk{margin:0}
 .btn.del{background:var(--fill-gray);color:var(--text-danger)}
@@ -85,7 +85,7 @@ label i{color:var(--text-danger);font-style:normal}
 .formhead{display:flex;align-items:center;gap:12px;margin-bottom:24px}
 .back{width:28px;height:28px;border-radius:50%;border:0;background:var(--fill-gray);font-size:14px}
 .back:hover{background:var(--fill-gray-hover)}
-@media(max-width:480px){.card{padding:16px}.actions{flex-direction:column-reverse}.btn{width:100%}.head .btn{width:auto}}
+@media(max-width:480px){.card{padding:16px}.actions:not(.row){flex-direction:column-reverse}.btn{width:100%}.head .btn{width:auto}}
 </style>
 </head>
 <body>
@@ -233,7 +233,8 @@ function render(){
   else if (dm) { if (!dt) return go('#/app'); root.innerHTML = wrapped(viewDetail(dt)); }
   else if (h === '#/new') root.innerHTML = wrapped(viewForm());
   else if (m) { if (!t) return go('#/app'); root.innerHTML = wrapped(viewForm(t)); }
-  else root.innerHTML = wrapped(viewApp());
+  else if (h === '#/app') root.innerHTML = wrapped(viewApp());
+  else return go('#/app');
 }
 
 function mandatory(id, bad){ document.getElementById('f-' + id).classList.toggle('err', bad); }
@@ -268,7 +269,7 @@ root.addEventListener('click', function(e){
   else if (el.dataset.edit) go('#/edit/' + el.dataset.edit);
   else if (el.dataset.del) { tasks = tasks.filter(function(t){ return t.key !== el.dataset.del; }); openMenu = null; render(); }
 });
-document.addEventListener('click', function(e){ if (openMenu && !root.contains(e.target)) { openMenu = null; render(); } });
+document.addEventListener('click', function(e){ if (openMenu && e.target.isConnected && !root.contains(e.target)) { openMenu = null; render(); } });
 window.addEventListener('hashchange', render);
 render();
 </script>

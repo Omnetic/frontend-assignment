@@ -1,4 +1,4 @@
-// Design tokens matching the Figma spec (colors, typography).
+// Design tokens matching the prototype (`prototype/index.html`) (colors, typography).
 // Framework-free: wire them into whatever styling solution you choose.
 
 export const colors = {
@@ -24,6 +24,9 @@ export const colors = {
     danger: '#E32C1E',
   },
 } as const;
+
+export const fontFamily =
+  '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
 
 export const fontSizes = {
   heading: {1: '28px', 2: '24px', 3: '20px'},
