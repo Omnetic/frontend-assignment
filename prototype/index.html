@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zentask prototype</title>
+<style>
+:root{
+  --text-primary:#001141;--text-secondary:#4D5667;--text-tertiary:#7A869A;--text-white:#FFFFFF;--text-danger:#B71C1C;
+  --fill-brand:#0F62FE;--fill-brand-hover:#0043CE;--fill-dark-blue:#001141;--fill-gray:#F1F2F6;--fill-gray-hover:#E6E8EF;--fill-white:#FFFFFF;
+  --border-brand:#0F62FE;--border-gray:#CAD1DE;--border-danger:#E32C1E;
+  --fs-h1:28px;--fs-h2:24px;--fs-h3:20px;--fs-base:16px;--fs-small:14px;
+  --fw-h1:700;--fw-h2:600;--fw-h3:500;--fw-base:400;--fw-alt:500;
+  --radius-button:100px;
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fill-gray);color:var(--text-primary);font:var(--fw-base) var(--fs-base)/1.5 var(--font)}
+button{font:inherit;cursor:pointer}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 48px}
+.top{display:flex;align-items:center;justify-content:space-between;padding:24px 0}
+.top svg{height:28px;width:auto;display:block}
+.user{display:flex;align-items:center;gap:8px;font-size:var(--fs-small);font-weight:var(--fw-alt)}
+.avatar{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#c99a6b,#7a5233);color:#fff;font-size:11px;display:grid;place-items:center}
+.card{background:var(--fill-white);border-radius:16px;padding:24px;box-shadow:0 1px 2px rgba(0,17,65,.05)}
+h1{font-size:var(--fs-h3);font-weight:var(--fw-h1);margin:0}
+h2{font-size:var(--fs-small);font-weight:var(--fw-h2);margin:0;padding-bottom:8px;border-bottom:1px solid var(--fill-gray-hover)}
+.date,.desc{color:var(--text-tertiary);font-size:var(--fs-small)}
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px}
+.btn{border:0;border-radius:var(--radius-button);padding:10px 20px;font-size:var(--fs-small);font-weight:var(--fw-alt);display:inline-flex;gap:8px;align-items:center;justify-content:center}
+.btn.primary{background:var(--fill-brand);color:var(--text-white)}
+.btn.primary:hover{background:var(--fill-brand-hover)}
+.btn.ghost{background:var(--fill-gray);color:var(--text-primary)}
+.btn.ghost:hover{background:var(--fill-gray-hover)}
+.btn.block{width:100%}
+.sec{margin-top:24px}
+.item{display:flex;gap:12px;align-items:flex-start;padding:12px 0;position:relative}
+.chk{flex:none;width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border-gray);background:#fff;margin-top:2px;padding:0;display:grid;place-items:center}
+.chk.on{background:var(--fill-brand);border-color:var(--fill-brand)}
+.chk.on::after{content:"";width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.body{flex:1;min-width:0}
+.title{font-size:var(--fs-small);font-weight:var(--fw-alt)}
+.done .title{color:var(--text-tertiary)}
+.key{font:11px var(--mono);color:var(--text-tertiary);margin-left:8px}
+.desc{margin:2px 0 0;font-size:12px}
+.more{border:0;background:none;color:var(--text-secondary);font-size:18px;line-height:1;padding:2px 8px;border-radius:6px}
+.more:hover{background:var(--fill-gray)}
+.menu{position:absolute;right:0;top:36px;background:#fff;border-radius:8px;box-shadow:0 4px 16px rgba(0,17,65,.18);padding:4px;z-index:5;min-width:150px}
+.menu button{display:block;width:100%;text-align:left;border:0;background:none;padding:8px 12px;border-radius:6px;font-size:var(--fs-small)}
+.menu button:hover{background:var(--fill-gray)}
+.menu .del{color:var(--text-danger)}
+.item[data-open]{cursor:pointer}
+.alert{max-width:440px;margin:24px auto 0;background:rgba(15,98,254,.1);color:var(--text-primary);border-radius:8px;padding:8px 12px;font-size:12px;text-align:center}
+.alert+.center{margin-top:16px}
+.sub{text-align:center;font-size:var(--fs-small);color:var(--text-secondary);margin:16px 0 0}
+.sub a{color:var(--fill-brand);font-weight:var(--fw-alt);text-decoration:none}
+.sub a:hover{text-decoration:underline}
+.full{font-size:var(--fs-small);color:var(--text-primary);white-space:pre-wrap;margin:0 0 24px}
+.tog{display:inline-flex;align-items:center;gap:8px;border:0;background:none;padding:0 8px;font-size:var(--fs-small);font-weight:var(--fw-alt);color:var(--text-primary)}
+.tog .chk{margin:0}
+.btn.del{background:var(--fill-gray);color:var(--text-danger)}
+.btn.del:hover{background:var(--fill-gray-hover)}
+.actions.row{justify-content:flex-start;align-items:center;flex-wrap:wrap}
+.empty{text-align:center;padding:8px 0 16px}
+.empty svg{width:150px;height:auto}
+.empty strong{display:block;font-size:var(--fs-small);margin-top:8px}
+.empty span{font-size:12px;color:var(--text-secondary)}
+.center{max-width:440px;margin:24px auto 0}
+.center .logo{display:flex;justify-content:center;margin-bottom:24px}
+.center .logo svg{height:32px;width:auto}
+.center p{font-size:var(--fs-small);color:var(--text-secondary);margin:8px 0 24px}
+label{display:block;font-size:12px;margin-bottom:4px}
+label i{color:var(--text-danger);font-style:normal}
+.field{margin-bottom:16px}
+.inp{display:flex;align-items:center;border:1px solid var(--border-gray);border-radius:4px;background:#fff}
+.inp:focus-within{border-color:var(--border-brand)}
+.inp input,.inp textarea{flex:1;border:0;outline:0;background:none;font:inherit;font-size:var(--fs-small);padding:10px 12px;color:var(--text-primary);resize:vertical;min-width:0}
+.inp textarea{min-height:96px}
+.err .inp{border-color:var(--border-danger)}
+.hint{display:none;color:var(--text-danger);font-size:12px;margin-top:4px}
+.err .hint{display:block}
+.eye{border:0;background:none;padding:0 12px;color:var(--text-primary);display:grid}
+.actions{display:flex;justify-content:space-between;gap:12px;margin-top:8px}
+.formhead{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+.back{width:28px;height:28px;border-radius:50%;border:0;background:var(--fill-gray);font-size:14px}
+.back:hover{background:var(--fill-gray-hover)}
+@media(max-width:480px){.card{padding:16px}.actions{flex-direction:column-reverse}.btn{width:100%}.head .btn{width:auto}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+var LOGO = `<svg role="img" aria-label="Zentask" viewBox="0 0 267 67" fill="none">
+<g id="Assets">
+<g id="Logo">
+<g id="Zentask">
+<path d="M249.35 42.1264L249.334 34.9879H250.282L259.299 24.9091H266.208L255.117 37.2585H253.892L249.35 42.1264ZM243.96 50V16.5455H249.873V50H243.96ZM259.707 50L251.539 38.5817L255.525 34.4162L266.78 50H259.707Z" fill="#001141"/>
+<path d="M239.465 31.5412L234.074 32.1293C233.922 31.5848 233.655 31.0729 233.274 30.5938C232.903 30.1146 232.402 29.728 231.771 29.434C231.139 29.1399 230.366 28.9929 229.451 28.9929C228.221 28.9929 227.186 29.2597 226.348 29.7933C225.52 30.327 225.111 31.0185 225.122 31.8679C225.111 32.5975 225.378 33.1911 225.923 33.6484C226.478 34.1058 227.393 34.4815 228.667 34.7756L232.947 35.6904C235.321 36.2022 237.085 37.0135 238.24 38.1243C239.405 39.2351 239.993 40.6889 240.004 42.4858C239.993 44.0649 239.53 45.4588 238.615 46.6676C237.711 47.8655 236.454 48.8021 234.842 49.4773C233.23 50.1525 231.379 50.4901 229.288 50.4901C226.217 50.4901 223.745 49.8475 221.872 48.5625C219.999 47.2666 218.882 45.4643 218.523 43.1556L224.289 42.6002C224.551 43.7327 225.106 44.5876 225.955 45.1648C226.805 45.742 227.91 46.0306 229.272 46.0306C230.676 46.0306 231.803 45.742 232.653 45.1648C233.513 44.5876 233.943 43.8743 233.943 43.0249C233.943 42.3061 233.666 41.7126 233.11 41.2443C232.566 40.7761 231.716 40.4167 230.562 40.1662L226.282 39.2678C223.875 38.7668 222.095 37.9228 220.941 36.7358C219.786 35.5379 219.214 34.0242 219.225 32.1946C219.214 30.6482 219.634 29.3087 220.483 28.1761C221.343 27.0327 222.536 26.1506 224.061 25.5298C225.596 24.8982 227.366 24.5824 229.37 24.5824C232.31 24.5824 234.624 25.2086 236.312 26.4609C238.011 27.7133 239.062 29.4067 239.465 31.5412Z" fill="#001141"/>
+<path d="M201.36 50.5064C199.77 50.5064 198.338 50.2233 197.064 49.657C195.801 49.0798 194.799 48.2304 194.058 47.1087C193.328 45.987 192.964 44.6039 192.964 42.9595C192.964 41.5438 193.225 40.3731 193.748 39.4475C194.27 38.5218 194.984 37.7813 195.888 37.2259C196.792 36.6705 197.81 36.2512 198.942 35.9681C200.086 35.674 201.267 35.4617 202.487 35.331C203.957 35.1785 205.15 35.0424 206.064 34.9226C206.979 34.7919 207.644 34.5959 208.057 34.3345C208.482 34.0623 208.694 33.643 208.694 33.0767V32.9787C208.694 31.7481 208.33 30.7952 207.6 30.12C206.87 29.4448 205.819 29.1073 204.447 29.1073C202.999 29.1073 201.85 29.4231 201.001 30.0547C200.162 30.6863 199.596 31.4323 199.302 32.2926L193.78 31.5085C194.216 29.9839 194.935 28.7098 195.937 27.6861C196.939 26.6515 198.164 25.8783 199.612 25.3665C201.06 24.8438 202.661 24.5824 204.415 24.5824C205.623 24.5824 206.827 24.724 208.025 25.0071C209.223 25.2903 210.317 25.7585 211.308 26.4119C212.299 27.0545 213.094 27.9311 213.693 29.0419C214.303 30.1527 214.608 31.5412 214.608 33.2074V50H208.923V46.5533H208.727C208.368 47.2502 207.861 47.9037 207.208 48.5135C206.565 49.1125 205.754 49.5971 204.774 49.9673C203.805 50.3267 202.667 50.5064 201.36 50.5064ZM202.895 46.1612C204.082 46.1612 205.112 45.9271 205.983 45.4588C206.854 44.9797 207.524 44.348 207.992 43.5639C208.471 42.7798 208.711 41.925 208.711 40.9993V38.0426C208.526 38.1951 208.21 38.3367 207.763 38.4673C207.328 38.598 206.838 38.7124 206.293 38.8104C205.749 38.9084 205.21 38.9955 204.676 39.0717C204.142 39.148 203.68 39.2133 203.287 39.2678C202.405 39.3876 201.616 39.5836 200.919 39.8558C200.222 40.1281 199.672 40.5092 199.269 40.9993C198.866 41.4785 198.665 42.0992 198.665 42.8615C198.665 43.9505 199.062 44.7727 199.857 45.3281C200.652 45.8835 201.665 46.1612 202.895 46.1612Z" fill="#001141"/>
+<path d="M190.114 24.9091V29.4829H175.69V24.9091H190.114ZM179.251 18.8977H185.165V42.4531C185.165 43.2481 185.284 43.8579 185.524 44.2826C185.774 44.6965 186.101 44.9796 186.504 45.1321C186.907 45.2845 187.354 45.3608 187.844 45.3608C188.214 45.3608 188.551 45.3335 188.856 45.2791C189.172 45.2246 189.412 45.1756 189.575 45.1321L190.572 49.7549C190.256 49.8638 189.804 49.9836 189.216 50.1143C188.639 50.245 187.931 50.3212 187.092 50.343C185.611 50.3866 184.277 50.1633 183.09 49.6733C181.903 49.1723 180.961 48.3991 180.264 47.3537C179.578 46.3082 179.24 45.0014 179.251 43.4332V18.8977Z" fill="#001141"/>
+<path d="M156.387 35.2983V50H150.474V24.9091H156.126V29.1726H156.42C156.997 27.7678 157.917 26.6515 159.181 25.8239C160.455 24.9962 162.028 24.5824 163.901 24.5824C165.633 24.5824 167.141 24.9527 168.426 25.6932C169.722 26.4337 170.724 27.5064 171.432 28.9112C172.151 30.3161 172.505 32.0204 172.494 34.0242V50H166.58V34.9389C166.58 33.2618 166.145 31.9496 165.274 31.0021C164.413 30.0547 163.221 29.581 161.696 29.581C160.662 29.581 159.741 29.8097 158.936 30.2671C158.141 30.7136 157.514 31.3615 157.057 32.2109C156.61 33.0604 156.387 34.0895 156.387 35.2983Z" fill="#001141"/>
+<path d="M135.234 50.4901C132.719 50.4901 130.546 49.9673 128.717 48.9219C126.898 47.8655 125.499 46.3736 124.518 44.446C123.538 42.5076 123.048 40.2261 123.048 37.6016C123.048 35.0206 123.538 32.7555 124.518 30.8061C125.509 28.8459 126.892 27.3213 128.668 26.2323C130.443 25.1323 132.528 24.5824 134.924 24.5824C136.47 24.5824 137.93 24.8329 139.302 25.3338C140.685 25.8239 141.905 26.5862 142.961 27.6208C144.028 28.6553 144.867 29.973 145.476 31.5739C146.086 33.1638 146.391 35.0587 146.391 37.2585V39.0717H125.825V35.0859H140.723C140.712 33.9534 140.467 32.946 139.988 32.0639C139.509 31.1709 138.839 30.4685 137.979 29.9567C137.129 29.4449 136.138 29.1889 135.006 29.1889C133.797 29.1889 132.735 29.483 131.82 30.071C130.905 30.6482 130.192 31.4105 129.68 32.358C129.179 33.2945 128.923 34.3236 128.913 35.4453V38.9247C128.913 40.384 129.179 41.6364 129.713 42.6818C130.247 43.7164 130.993 44.5114 131.951 45.0668C132.909 45.6113 134.031 45.8835 135.316 45.8835C136.176 45.8835 136.955 45.7637 137.652 45.5242C138.349 45.2737 138.953 44.9089 139.465 44.4297C139.977 43.9505 140.364 43.357 140.625 42.6492L146.146 43.2699C145.798 44.7292 145.133 46.0033 144.153 47.0923C143.184 48.1705 141.943 49.009 140.429 49.608C138.915 50.196 137.184 50.4901 135.234 50.4901Z" fill="#001141"/>
+<path d="M94.6791 50V46.2266L111.831 21.6257H94.5811V16.5455H119.345V20.3189L102.21 44.9198H119.443V50H94.6791Z" fill="#001141"/>
+</g>
+<g id="Pictogram">
+<path id="Vector" fill-rule="evenodd" clip-rule="evenodd" d="M19.1786 22.1457C17.2919 18.8876 16.2119 15.1055 16.2119 11.0732C16.2119 7.04055 17.2924 3.25821 19.1786 1.7502e-05C22.9436 -0.00471687 26.7593 0.950969 30.2519 2.9673C33.7441 4.98349 36.4793 7.80986 38.3575 11.0725L38.3571 11.0732H38.358C42.1732 17.6999 42.4525 26.1262 38.3575 33.219C30.1675 33.219 23.0102 28.7633 19.1786 22.146V22.1457Z" fill="#0F62FE" fill-opacity="0.4"/>
+<path id="Vector_2" fill-rule="evenodd" clip-rule="evenodd" d="M38.3577 33.219C34.2627 26.1262 34.5425 17.6999 38.3572 11.0732H38.3581L38.3577 11.0725C40.2364 7.80986 42.9716 4.98349 46.4638 2.9673C49.956 0.950969 53.7716 -0.00471687 57.5366 1.7502e-05C59.4233 3.25821 60.5033 7.04055 60.5033 11.0732C60.5033 15.1055 59.4233 18.8876 57.537 22.1457H57.5366L57.537 22.146C53.7055 28.7633 46.5477 33.219 38.3577 33.219Z" fill="#0F62FE" fill-opacity="0.3"/>
+<path id="Vector_3" fill-rule="evenodd" clip-rule="evenodd" d="M19.1787 44.2918C15.4137 44.2965 11.5983 43.3407 8.10624 41.3246C4.61386 39.3085 1.87838 36.4819 0 33.219C1.87838 29.9559 4.61386 27.1293 8.10624 25.113C11.5983 23.0968 15.4137 22.1411 19.1787 22.1457C26.8254 22.1552 34.2626 26.1261 38.3576 33.219C34.2626 40.3116 26.8254 44.2824 19.1787 44.2918Z" fill="#0F62FE" fill-opacity="0.5"/>
+<path id="Vector_4" fill-rule="evenodd" clip-rule="evenodd" d="M38.3577 33.219C42.4527 26.1261 49.8903 22.1552 57.5366 22.1457L57.537 22.146V22.1457C61.3016 22.1411 65.1172 23.0968 68.6094 25.113C72.1016 27.1293 74.8372 29.9559 76.7155 33.219C74.8372 36.4819 72.1016 39.3085 68.6094 41.3246C65.1172 43.3407 61.3016 44.2965 57.537 44.2918H57.5366C49.8903 44.2824 42.4527 40.3116 38.3577 33.219Z" fill="#0F62FE" fill-opacity="0.8"/>
+<path id="Vector_5" fill-rule="evenodd" clip-rule="evenodd" d="M38.3571 55.3646L38.3575 55.3651C36.4793 58.6276 33.7441 61.4541 30.2519 63.4702C26.7593 65.4868 22.9436 66.4426 19.1786 66.4379C17.2924 63.1796 16.2119 59.3972 16.2119 55.3646C16.2119 51.3319 17.2919 47.5501 19.1786 44.2918C23.0102 37.6744 30.1675 33.219 38.3575 33.219C42.4525 40.3116 42.1732 48.7379 38.358 55.3646H38.3571Z" fill="#0F62FE" fill-opacity="0.6"/>
+<path id="Vector_6" fill-rule="evenodd" clip-rule="evenodd" d="M38.3581 55.3646H38.3572C34.5425 48.7379 34.2627 40.3116 38.3577 33.219C46.5477 33.219 53.7055 37.6744 57.537 44.2918C59.4233 47.5501 60.5033 51.3319 60.5033 55.3646C60.5033 59.3972 59.4233 63.1796 57.5366 66.4379C53.7716 66.4426 49.956 65.4868 46.4638 63.4702C42.9716 61.4541 40.2364 58.6276 38.3577 55.3651L38.3581 55.3646Z" fill="#0F62FE" fill-opacity="0.7"/>
+</g>
+</g>
+</g>
+</svg>`;
+var FLOWER = `<svg role="img" aria-label="Empty" viewBox="0 0 150 130" fill="none">
+<g id="Assets">
+<g id="Image1">
+<g id="Pictogram">
+<path id="Vector" fill-rule="evenodd" clip-rule="evenodd" d="M51.7183 51.4559C49.4465 47.5328 48.146 42.9786 48.146 38.1231C48.146 33.2673 49.447 28.7129 51.7183 24.7896C56.2519 24.7839 60.8464 25.9346 65.052 28.3626C69.2571 30.7903 72.5506 34.1937 74.8123 38.1224L74.8117 38.1231H74.8128C79.4068 46.1025 79.7432 56.2489 74.8123 64.7896C64.9504 64.7896 56.332 59.4244 51.7183 51.4563V51.4559Z" fill="#0F62FE" fill-opacity="0.4"/>
+<path id="Vector_2" fill-rule="evenodd" clip-rule="evenodd" d="M74.8123 64.7896C69.8813 56.2489 70.2183 46.1025 74.8117 38.1231H74.8128L74.8123 38.1224C77.0745 34.1937 80.368 30.7903 84.5731 28.3626C88.7781 25.9346 93.3726 24.7839 97.9062 24.7896C100.178 28.7129 101.479 33.2673 101.479 38.1231C101.479 42.9786 100.178 47.5328 97.9068 51.4559H97.9062L97.9068 51.4563C93.2931 59.4244 84.6741 64.7896 74.8123 64.7896Z" fill="#0F62FE" fill-opacity="0.3"/>
+<path id="Vector_3" fill-rule="evenodd" clip-rule="evenodd" d="M51.7185 78.1228C47.1849 78.1284 42.5907 76.9776 38.3857 74.5499C34.1805 72.1223 30.8866 68.7187 28.6248 64.7897C30.8866 60.8605 34.1805 57.4568 38.3857 55.029C42.5907 52.6012 47.1849 51.4504 51.7185 51.456C60.9261 51.4674 69.8815 56.2489 74.8124 64.7897C69.8815 73.3302 60.9261 78.1115 51.7185 78.1228Z" fill="#0F62FE" fill-opacity="0.5"/>
+<path id="Vector_4" fill-rule="evenodd" clip-rule="evenodd" d="M74.8123 64.7897C79.7432 56.2489 88.6991 51.4674 97.9062 51.456L97.9068 51.4564V51.456C102.44 51.4504 107.034 52.6012 111.239 55.029C115.444 57.4568 118.738 60.8605 121 64.7897C118.738 68.7187 115.444 72.1223 111.239 74.5499C107.034 76.9776 102.44 78.1284 97.9068 78.1228H97.9062C88.6991 78.1115 79.7432 73.3302 74.8123 64.7897Z" fill="#0F62FE" fill-opacity="0.8"/>
+<path id="Vector_5" fill-rule="evenodd" clip-rule="evenodd" d="M74.8117 91.4559L74.8123 91.4564C72.5506 95.3849 69.2571 98.7885 65.052 101.216C60.8464 103.644 56.2519 104.795 51.7183 104.79C49.447 100.866 48.146 96.3117 48.146 91.4559C48.146 86.6 49.4465 82.0461 51.7183 78.1227C56.332 70.1546 64.9504 64.7896 74.8123 64.7896C79.7432 73.3301 79.4068 83.4764 74.8128 91.4559H74.8117Z" fill="#0F62FE" fill-opacity="0.6"/>
+<path id="Vector_6" fill-rule="evenodd" clip-rule="evenodd" d="M74.8128 91.4559H74.8117C70.2183 83.4764 69.8813 73.3301 74.8123 64.7896C84.6741 64.7896 93.2931 70.1546 97.9068 78.1227C100.178 82.0461 101.479 86.6 101.479 91.4559C101.479 96.3117 100.178 100.866 97.9062 104.79C93.3726 104.795 88.7781 103.644 84.5731 101.216C80.368 98.7885 77.0745 95.3849 74.8123 91.4564L74.8128 91.4559Z" fill="#0F62FE" fill-opacity="0.7"/>
+</g>
+<g id="Pictogram_2" opacity="0.3">
+<path id="Vector_7" fill-rule="evenodd" clip-rule="evenodd" d="M37.4056 43.1927C33.7258 36.8382 31.6194 29.4616 31.6194 21.5969C31.6194 13.7318 33.7267 6.35476 37.4056 3.41357e-05C44.7489 -0.00919973 52.1908 1.85476 59.0028 5.78738C65.8139 9.71973 71.1486 15.2323 74.8119 21.5958L74.811 21.5969H74.8129C82.2539 34.5216 82.7988 50.9562 74.8119 64.7899C58.8383 64.7899 44.8787 56.0996 37.4056 43.1933V43.1927Z" fill="#0F62FE" fill-opacity="0.4"/>
+<path id="Vector_8" fill-rule="evenodd" clip-rule="evenodd" d="M74.8113 64.7899C66.8245 50.9562 67.3703 34.5216 74.8104 21.5969H74.8122L74.8113 21.5958C78.4756 15.2323 83.8102 9.71973 90.6213 5.78738C97.4324 1.85476 104.874 -0.00919973 112.218 3.41357e-05C115.897 6.35476 118.004 13.7318 118.004 21.5969C118.004 29.4616 115.897 36.8382 112.219 43.1927H112.218L112.219 43.1933C104.745 56.0996 90.785 64.7899 74.8113 64.7899Z" fill="#0F62FE" fill-opacity="0.3"/>
+<path id="Vector_9" fill-rule="evenodd" clip-rule="evenodd" d="M37.4059 86.3867C30.0627 86.3958 22.6212 84.5317 15.8103 80.5995C8.99882 76.6674 3.66356 71.1545 0 64.7904C3.66356 58.4262 8.99882 52.9131 15.8103 48.9806C22.6212 45.0482 30.0627 43.1843 37.4059 43.1932C52.32 43.2117 66.8254 50.9565 74.8123 64.7904C66.8254 78.6238 52.32 86.3684 37.4059 86.3867Z" fill="#0F62FE" fill-opacity="0.5"/>
+<path id="Vector_10" fill-rule="evenodd" clip-rule="evenodd" d="M74.8123 64.7904C82.7991 50.9565 97.3054 43.2117 112.219 43.1932L112.219 43.1939V43.1932C119.562 43.1843 127.004 45.0482 133.815 48.9806C140.626 52.9131 145.961 58.4262 149.625 64.7904C145.961 71.1545 140.626 76.6674 133.815 80.5995C127.004 84.5317 119.562 86.3958 112.219 86.3867H112.219C97.3054 86.3684 82.7991 78.6238 74.8123 64.7904Z" fill="#0F62FE" fill-opacity="0.8"/>
+<path id="Vector_11" fill-rule="evenodd" clip-rule="evenodd" d="M74.811 107.982L74.8119 107.983C71.1486 114.346 65.8139 119.859 59.0028 123.791C52.1908 127.725 44.7489 129.589 37.4056 129.58C33.7267 123.225 31.6194 115.848 31.6194 107.982C31.6194 100.117 33.7258 92.741 37.4056 86.3861C44.8787 73.4797 58.8383 64.7898 74.8119 64.7898C82.7988 78.6232 82.2539 95.0577 74.8129 107.982H74.811Z" fill="#0F62FE" fill-opacity="0.6"/>
+<path id="Vector_12" fill-rule="evenodd" clip-rule="evenodd" d="M74.8122 107.982H74.8104C67.3703 95.0577 66.8245 78.6232 74.8113 64.7898C90.785 64.7898 104.745 73.4797 112.219 86.3861C115.897 92.741 118.004 100.117 118.004 107.982C118.004 115.848 115.897 123.225 112.218 129.58C104.874 129.589 97.4324 127.725 90.6213 123.791C83.8102 119.859 78.4756 114.346 74.8113 107.983L74.8122 107.982Z" fill="#0F62FE" fill-opacity="0.7"/>
+</g>
+</g>
+</g>
+</svg>`;
+var LOREM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in tortor at purus pulvinar porta. Suspendisse eu ultrices neque, sed laoreet ante.';
+var tasks = [
+  {key:'ZEN00001', title:'Meeting with the contributors', description:LOREM, done:false},
+  {key:'ZEN00002', title:'Work on the first book chapter', description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum pulvinar fermentum.', done:false},
+  {key:'ZEN00003', title:'Lunch with Eddie', description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', done:true},
+  {key:'ZEN00004', title:'Meeting with Isabelle', description:'', done:true}
+];
+var loggedIn = false, openMenu = null, root = document.getElementById('root');
+
+function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function find(k){ return tasks.filter(function(t){ return t.key === k; })[0]; }
+function nextKey(){ return 'ZEN' + String(tasks.length ? Math.max.apply(null, tasks.map(function(t){ return +t.key.slice(3); })) + 1 : 1).padStart(5,'0'); }
+function go(h){ if (location.hash === h) render(); else location.hash = h; }
+
+function topbar(){
+  return '<div class="top">' + LOGO + '<div class="user"><span class="avatar">AB</span>Anette Black</div></div>';
+}
+function item(t){
+  return '<div class="item ' + (t.done ? 'done' : '') + '" data-open="' + t.key + '"><button class="chk ' + (t.done ? 'on' : '') + '" data-toggle="' + t.key + '" aria-label="Toggle ' + esc(t.title) + '"></button>' +
+    '<div class="body"><div class="title">' + esc(t.title) + '<span class="key">' + t.key + '</span></div>' +
+    (t.description ? '<p class="desc">' + esc(t.description) + '</p>' : '') + '</div>' +
+    '<button class="more" data-menu="' + t.key + '" aria-label="More">&#8942;</button>' +
+    (openMenu === t.key ? '<div class="menu"><button data-toggle="' + t.key + '">' + (t.done ? 'Mark as incomplete' : 'Complete') + '</button><button data-edit="' + t.key + '">Edit</button><button class="del" data-del="' + t.key + '">Delete</button></div>' : '') + '</div>';
+}
+var BANNER = '<div class="alert" role="note">This is a click-through prototype with mocked data — log in with any username and password.</div>';
+function creds(id, title, intro, btn, sub){
+  return BANNER + '<div class="center" style="margin-top:16px"><div class="logo">' + LOGO + '</div><div class="card"><h1>' + title + '</h1><p>' + intro + '</p>' +
+    '<form id="' + id + '" novalidate>' + field('u','Username','<input id="u" autocomplete="username">') +
+    field('p','Password','<input id="p" type="password" autocomplete="' + (id === 'login' ? 'current-password' : 'new-password') + '"><button type="button" class="eye" id="eye" aria-label="Show password">&#128065;</button>') +
+    '<button class="btn primary block" type="submit">' + btn + ' &rarr;</button></form><div class="sub">' + sub + '</div></div></div>';
+}
+function viewRegister(){
+  return creds('register','Create your account!','Welcome to Zentask! Pick a username and password to start organising your tasks.','Register','Already have an account? <a href="#/login">Log in</a>');
+}
+function viewDetail(t){
+  return topbar() + '<div class="card"><div class="formhead"><button class="back" data-go="#/app" aria-label="Back">&larr;</button><h1>' + esc(t.title) + '</h1><span class="key">' + t.key + '</span></div>' +
+    '<p class="full">' + (t.description ? esc(t.description) : '<span class="date">No description.</span>') + '</p>' +
+    '<div class="actions row"><button class="btn primary" data-edit="' + t.key + '">Edit &rarr;</button>' +
+    '<button class="tog" data-toggle="' + t.key + '"><span class="chk ' + (t.done ? 'on' : '') + '"></span>' + (t.done ? 'Mark as incomplete' : 'Mark as completed') + '</button>' +
+    '<button class="btn del" data-del="' + t.key + '">Delete</button></div></div>';
+}
+function viewLogin(){
+  return creds('login','It’s good to have you back!','Welcome to our secure portal! To access the full functionality of our app, kindly provide your credentials below. Your privacy is our priority.','Log in','Don’t have an account? <a href="#/register">Register</a>');
+}
+function field(id, label, inner, optional){
+  return '<div class="field" id="f-' + id + '"><label for="' + id + '">' + (optional ? '' : '<i>*</i> ') + label + '</label><div class="inp">' + inner + '</div><div class="hint">The field is mandatory</div></div>';
+}
+function viewApp(){
+  var open = tasks.filter(function(t){ return !t.done; }), done = tasks.filter(function(t){ return t.done; });
+  var d = new Date().toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
+  var h = topbar() + '<div class="card"><div class="head"><div><h1>Hello Anette!</h1><div class="date">' + d + '</div></div><button class="btn primary" data-go="#/new">Add task +</button></div>';
+  h += open.length ? '<div class="sec"><h2>To-do</h2>' + open.map(item).join('') + '</div>'
+    : '<div class="empty">' + FLOWER + '<strong>You are amazing!</strong><span>There is no more task to do.</span></div>';
+  if (done.length) h += '<div class="sec"><h2>Completed</h2>' + done.map(item).join('') + '</div>';
+  return h + '</div>';
+}
+function viewForm(t){
+  var edit = !!t;
+  return topbar() + '<div class="card"><div class="formhead"><button class="back" data-go="#/app" aria-label="Back">&larr;</button><h1>' + (edit ? esc(t.title) : 'New task') + '</h1>' +
+    (edit ? '<span class="key">' + t.key + '</span>' : '') + '</div>' +
+    '<form id="form" novalidate>' + field('name','Task name','<input id="name" value="' + (edit ? esc(t.title) : '') + '">') +
+    field('desc','Description (Optional)','<textarea id="desc">' + (edit ? esc(t.description) : '') + '</textarea>', true) +
+    '<div class="actions"><button type="button" class="btn ghost" data-go="#/app">' + (edit ? 'Discard changes' : 'Cancel') + '</button>' +
+    '<button type="submit" class="btn primary">' + (edit ? 'Save changes' : 'Create task') + ' &rarr;</button></div></form></div>';
+}
+
+function render(){
+  var h = location.hash || '#/login', m = h.match(/^#\/edit\/(.+)$/), t = m && find(m[1]), dm = h.match(/^#\/detail\/(.+)$/), dt = dm && find(dm[1]);
+  openMenu = h === '#/app' ? openMenu : null;
+  if (!loggedIn && h !== '#/login' && h !== '#/register') return go('#/login');
+  if (loggedIn && (h === '#/login' || h === '#/register')) return go('#/app');
+  var wrapped = function(x){ return '<div class="wrap">' + x + '</div>'; };
+  if (h === '#/login') root.innerHTML = wrapped(viewLogin());
+  else if (h === '#/register') root.innerHTML = wrapped(viewRegister());
+  else if (dm) { if (!dt) return go('#/app'); root.innerHTML = wrapped(viewDetail(dt)); }
+  else if (h === '#/new') root.innerHTML = wrapped(viewForm());
+  else if (m) { if (!t) return go('#/app'); root.innerHTML = wrapped(viewForm(t)); }
+  else root.innerHTML = wrapped(viewApp());
+}
+
+function mandatory(id, bad){ document.getElementById('f-' + id).classList.toggle('err', bad); }
+
+root.addEventListener('submit', function(e){
+  e.preventDefault();
+  if (e.target.id === 'login' || e.target.id === 'register') {
+    var u = document.getElementById('u').value.trim(), p = document.getElementById('p').value;
+    mandatory('u', !u); mandatory('p', !p);
+    if (u && p) { loggedIn = true; go('#/app'); }
+  } else if (e.target.id === 'form') {
+    var name = document.getElementById('name').value.trim(), desc = document.getElementById('desc').value.trim();
+    mandatory('name', !name);
+    if (!name) return;
+    var m = location.hash.match(/^#\/edit\/(.+)$/), t = m && find(m[1]);
+    if (t) { t.title = name; t.description = desc; }
+    else tasks.push({key:nextKey(), title:name, description:desc, done:false});
+    go('#/app');
+  }
+});
+root.addEventListener('click', function(e){
+  var el = e.target.closest('[data-toggle],[data-menu],[data-edit],[data-del],[data-go],[data-open],#eye');
+  var wasOpen = openMenu;
+  if (!el) { if (wasOpen) { openMenu = null; render(); } return; }
+  if (el.id === 'eye') {
+    var p = document.getElementById('p'), show = p.type === 'password';
+    p.type = show ? 'text' : 'password'; el.setAttribute('aria-label', show ? 'Hide password' : 'Show password'); el.style.opacity = show ? .5 : 1;
+  } else if (el.dataset.go) go(el.dataset.go);
+  else if (el.dataset.toggle) { var t = find(el.dataset.toggle); t.done = !t.done; openMenu = null; render(); }
+  else if (el.dataset.menu) { openMenu = wasOpen === el.dataset.menu ? null : el.dataset.menu; render(); }
+  else if (el.dataset.open) go('#/detail/' + el.dataset.open);
+  else if (el.dataset.edit) go('#/edit/' + el.dataset.edit);
+  else if (el.dataset.del) { tasks = tasks.filter(function(t){ return t.key !== el.dataset.del; }); openMenu = null; render(); }
+});
+document.addEventListener('click', function(e){ if (openMenu && !root.contains(e.target)) { openMenu = null; render(); } });
+window.addEventListener('hashchange', render);
+render();
+</script>
+</body>
+</html>

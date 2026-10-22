@@ -16,7 +16,7 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["backend/**/*", "./src/**/*"],
+  "include": ["./src/**/*"],
   "exclude": ["node_modules"],
-  "files": ["./@types/svg.d.ts", "@types/environment.d.ts"]
+  "files": ["./@types/svg.d.ts"]
 }

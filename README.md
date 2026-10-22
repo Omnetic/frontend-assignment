@@ -1,55 +1,75 @@
-# Quick Overview
+> [!NOTE] Quick Overview
+> **The repository**
+> A React scaffold built on Vite with TypeScript. There is no backend
+> prepared — that's up to you.
+>
+> **The app**<br>
+> This is what you will build: open `prototype/index.html` in your browser — a
+> clickable preview with mocked data, handed over the same way our product team
+> hands work to us.
+>
+> **Use of AI**
+> We advise you to use AI tools (Claude, Copilot, Cursor, …) — we do, daily.
+> But submit only code you own: in the interview you will extend this exact
+> project live.
 
-- This repository is built on [Create React App](https://github.com/facebook/create-react-app) with TypeScript configuration
-- [Chakra Theme](https://chakra-ui.com/) is set up with all the colors and sizes
+![Zentask](./src/assets/readme/banner.png)
+
+## Backend
+
+Build your own REST API. From scratch.
+
+- **PHP is strongly advised** — it is our stack (Symfony welcome). If you
+  really don't work with PHP, Node/TypeScript is acceptable.
+- **Auth is cookie-based**: register, login, logout. No tokens in
+  `localStorage`, CSRF protection is a bonus.
+- **Todos belong to users**: full CRUD + complete/incomplete, and a user can
+  only ever see or touch their own todos.
+- **Each todo gets a Jira-like key** (e.g. `ZEN00001`): prefix and digit count
+  are set in backend config. Keys are per user, sequential, unique and never
+  reused. Generate them in application code: no DB auto-increment, sequences,
+  triggers or stored procedures.
+- **OpenAPI schema is a required deliverable**: document your API
+  and tell us in the README where to find it.
+- **Persistence is your choice** — pick something you can defend.
+- **`docker compose up` must start your backend (and database)**. If we can't
+  run it in 5 minutes, we can't review it.
+
+## Frontend
+
+Build it against your own API, matching the prototype in `prototype/index.html`.
+
+1. Login and register pages
+2. A todo list with all todos of the logged-in user
+3. Each todo has a quick actions button revealing delete and complete
+4. Clicking a todo opens the todo detail page
+5. The detail shows the todo in full length, with edit, delete, and
+   mark-as-completed actions
+
+#### Technical requirements
+
+- **Stateful fetching**: loading, error, and success states are handled.
+- **Error handling**: failed requests surface to the user.
+- **Component system**: basic building blocks (Button, Checkbox, Card…).
+- **A tested utility function**: at least one utility covered with Jest.
+
+#### Tooling
+
+- Design tokens (colors, typography) live in `src/theme/tokens.ts` — wire them into any styling solution you like
 - For unit testing, [Jest](https://jestjs.io/) is already installed
-- You will use our prettier, eslint, and typescript config for static testing <br/> `npm run eslint && npm run prettify && npm run typecheck`
+- Use our prettier, eslint, and typescript config for static testing
+  `npm run eslint && npm run prettify && npm run typecheck`
 
-For a quick start follow these commands
+## Before you submit
 
-```sh
-npm install
-npm start
-```
+Make sure every box ticks — on a clean machine, not just yours:
 
-Then open [localhost:3000](http://localhost:3000/) to see your app.
-Or open [localhost:3001/api/docs](http://localhost:3001/api/docs) to see APIs you will be working with<br>
+- [ ] `docker compose up` starts your backend — PHP or Node — together with its database
+- [ ] `npm start` runs the frontend against it
+- [ ] All tests pass: `npm test`
+- [ ] Lint, formatting and types are clean: `npm run eslint && npm run prettify && npm run typecheck`
+- [ ] Your README explains the setup and where the OpenAPI schema lives
 
----
-
-![Alt text](./src/assets/readme/banner.png)
-
-**Your task will be to write a `To-Do app`.** <br/>
-You might think a to-do list isn't a challenge, and
-that's right, that is why we're gonna make it a little bit harder.
-
-You can use the `Chakra UI` design system with our style theme. This means that you will create the entire task based on the [Figma specification](https://www.figma.com/file/JoD25P1n4ALPTdt1wesM1S/Zentask---Frontend-Assignment?type=design&t=qZXHzbWa37NSYGcn-6).
-
-The assignment will not be completely detailed, i.e. you will have to think about the details. How you handle it is up to you and we will grade you accordingly. You will be given a rough description, and figma specification.
-
-| Title                  | 1.                                                                                                                                    | 2.                                                                                                                          | 3.                                                                                                                                     |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| **Requirements**       | Statefull fetching                                                                                                                    | Error handling                                                                                                              | Write utility function to get formatted current date and test with jest                                                                |
-| **What we appreciate** | Responsive design _(Desktop, Tablet, and Mobile)_                                                                                     | Basic component system _(Button, Checkbox, Card, etc.)_                                                                     | Chakra UI / tailwind setup _(Chakra is already set up in the project, but feel free to ditch or overwrite the current implementation)_ |
-| **Where we relieve**   | Don't have time to waste with fancy design or tranlations. Write a simple proof of concept and focus on the logical part of your code | Performance _(let's focus on delivering a working project, we can discuss potential improvements in our online interview )_ |                                                                                                                                        |
-
-**Feel free to update update the readme.md with any notes, feedback or comments**
-
-### Description
-
-You will create a simple to-do app, with a user register and login. You will work with local BE, already pre-build in your project.
-
-1. First, you will handle authentication, including login and register page.
-2. Then you create a simple todo list with all todos assigned to logged-in
-3. Each todo has quick actions button, that will reveal delete and complete actions
-4. On todo click, you will be redirected to the todo detail page
-5. On the todo detail page, you see todo in full length and have options to edit the todo as well as delete and mark it as completed
-
-## Important links
-
-- [Api docs](http://localhost:3001/api/docs) _(will work only when the project is locally started)_
-- [Figma specification](https://www.figma.com/file/JoD25P1n4ALPTdt1wesM1S/Zentask---Frontend-Assignment?type=design&t=qZXHzbWa37NSYGcn-6)
-- [Chakra UI](https://chakra-ui.com/)
-- [Jest](https://jestjs.io/)
+Feel free to update the README with any notes, feedback or comments.
 
 **That's it! Good luck!**
