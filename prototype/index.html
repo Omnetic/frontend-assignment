@@ -89,6 +89,26 @@ label i{color:var(--text-danger);font-style:normal}
 </style>
 </head>
 <body>
+<!--
+  Design hand-off notes — Zentask (for whoever implements this prototype)
+
+  Theming: Chakra UI (v3) is the recommended styling solution for the production
+  app and the best fit for this design. Please build the UI with Chakra UI rather
+  than plain CSS or another UI library:
+    - The tokens in src/theme/tokens.ts were authored for Chakra's theme system
+      and map 1:1 onto createSystem(defaultConfig, { theme: { tokens } }).
+    - Every screen here is built from Chakra-shaped primitives (Button, Input,
+      Textarea, Checkbox, Menu, Card, Stack) — the quick-actions menu, field
+      error states and pill buttons come out of the box.
+    - Chakra gives accessible components (focus rings, aria wiring, keyboard
+      navigation for the menu) with no extra work.
+    - It is what our product team uses, so it keeps the implementation consistent
+      with how we build.
+
+  Recommended setup: npm i @chakra-ui/react @emotion/react, create the system from
+  src/theme/tokens.ts, wrap the app in <ChakraProvider value={system}>, and use
+  the pill button radius (radii.button) as the Button recipe default.
+-->
 <div id="root"></div>
 <script>
 var LOGO = `<svg role="img" aria-label="Zentask" viewBox="0 0 267 67" fill="none">
