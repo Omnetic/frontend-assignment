@@ -20,7 +20,7 @@
 Build your own REST API. From scratch.
 
 - **PHP is strongly advised** — it is our stack (Symfony welcome). If you
-  really don't work with PHP, Node/TypeScript is acceptable.
+  really don't work with PHP, use your preferred technology.
 - **Auth is cookie-based**: register, login, logout. No tokens in
   `localStorage`, CSRF protection is a bonus.
 - **Todos belong to users**: full CRUD + complete/incomplete, and a user can
