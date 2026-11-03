@@ -10,6 +10,7 @@
  * @see https://styled-components.com/docs/api
  */
 import {createGlobalStyle} from 'styled-components';
+import {colors, fontFamily} from './theme/tokens';
 
 const GlobalStyle = createGlobalStyle`
   html, body, div, span, applet, object, iframe,
@@ -31,8 +32,8 @@ const GlobalStyle = createGlobalStyle`
      font-size: 100%;
      font: inherit;
      vertical-align: baseline;
-     background-color: #E5E5E5;
-     color: #091E42;
+     background-color: ${colors.fill.gray};
+     color: ${colors.text.primary};
    }
    html, body, #root{
     height: 100%;
@@ -66,7 +67,7 @@ const GlobalStyle = createGlobalStyle`
      line-height: 1;
      margin: 0;
      padding: 0;
-     font-family: Open-Sans, Helvetica, Sans-Serif;
+     font-family: ${fontFamily};
      font-size: 16px;
      height: 100%;
    }
